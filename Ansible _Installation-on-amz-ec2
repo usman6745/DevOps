@@ -1,0 +1,97 @@
+Install Ansible on Amazon ec2 linux machine
+#sudo su
+                                                                                                  #yum install python-pip -y
+                                                                                                  #pip install ansible -y
+                                                                                                  #ansible --version
+
+                                                                                                  or by using repo
+
+#sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+#sudo yum -y install ansible
+
+#ansible --version
+  [root@usmanshariff2c ~]# ansible --version
+ansible 2.7.1
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python2.7/site-packages/ansible
+  executable location = /bin/ansible
+  python version = 2.7.14 (default, Jul 26 2018, 19:59:38) [GCC 7.3.1 20180303 (Red Hat 7.3.1-5)]
+  
+  
+ now add ansible user as ansadmin
+ #useradd ansadmin
+ #passwd ansadmin
+    add this user into sudoers file
+    #visudo
+    ansadmin  ALL=(ALL)   NOPASSWD  :ALL
+    :wq!
+  
+
+ 
+note : create the same user in the remote machines and also add those created user into sudoers file, where it has to connect or to do any ssh activities and do perform actions
+
+
+ now change the permissions of /etc/ansible - directory in the user and group of ansadmin instead of root
+  #chown -R ansadmin:ansadmin /etc/ansible
+  #ls -l /etc/ansible
+
+now login as ansadmin
+#su ansadmin
+#ssh-keygen
+#ssh-copy-id -i .ssh/id_rsa.pub  ansadmin@<remote-ip-addr>
+
+#ssh ansadmin@<remote-ip-addr> 
+exit
+do this type of cross check with remote machines too for further connection activities
+-> Make a password less authentication
+
+now do a test ping from ansbile server to webserver 
+
+add the hosts in /etc/ansible/hosts
+  [webservers]
+  <web-ser-ipaddr>
+  :wq!
+
+#ansible all -m ping
+[ansadmin@usmanshariff3c ~]$ ansible all -m ping
+172.31.41.18 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+                        it has to be success
+ 
+===
+Now login into Jenkins home page 
+
+Jenkins -> manage jenkins -> available -> publish over ssh -> install without restart
+ Jenkins -> system configuration -> publish over ssh -> add ssh -> give the host ip -<> hostname -> user -> additional -> password -< test configuration => success
+
+before that -> go to ansible server -> /opt/playbooks
+#mkdir /opt/playbooks
+#cd /opt/playbooks
+#vi copyfile.yml
+ ---
+ - hosts: webserver
+   become: true
+   user: ansadmin
+   become_method: su
+   tasks:
+     - name: copy war onto tomcat server
+       copy:
+          src: /etc/ansible/playbooks/webapp/target/webapp.war
+          dest: /opt/tomcat/apache-tomcat-8.5.35/webapps
+
+         
+         :wq!
+         
+
+#ansible-playbook copyfile.yml --check
+
+
+Now go to Jenkins -> new item -> set git repo -> https://github.com/usman6745/hello-world_test.git -> build - pom.xml, Goal and options: clean install package -> add post-build-steps -> send files or execute commands over ssh -< select the ansible server -> src = webapp/target/*.war, remote director = //etc/ansible/playbooks/  
+-> add again -: execute files over ssh -> ansible-playbook /etc/ansible/playbooks/copyfile.yml
+
+apply and save 
+Build
+
+
