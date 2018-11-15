@@ -1,0 +1,40 @@
+Install Maven in local jenkins server
+#mkdir /opt/maven
+#cd /opt/maven
+download the maven tar.gz file in maven directory and unzip
+#wget http://mirrors.fibergrid.in/apache/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
+#tar -zxvf apache-maven-3.6.0-bin.tar.gz
+now set the maven home directory in environment file LIKE BELOW
+    PATH=$PATH:$JAVA_HOME:$M2_HOME:$M2:$HOME/bin
+    JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-0.amzn2.x86_64/
+    M2_HOME=/opt/maven/apache-maven-3.6.0
+    M2=$M2_HOME/bin
+  :wq!
+
+#source .bash_profile
+#echo $JAVA_HOME
+#echo $M2_HOME
+#echo $M2
+#echo $PATH
+
+now go to jenkins home page
+-> manage jenkins
+-> manage plugins
+-> available -> (look for maven invoker) -> install without restart
+-> go to manage jenkins -> gloabl tool configuration -> set the maven home directory like below
+      NAME: M2_HOME
+      MAVEN_HOME: /opt/maven/apache-maven-3.6.0
+  APPLY & save
+now go to jenkins server linux box and install git
+#yum install git -y
+
+now go to jenkins home page and -> manage jenkins -> manage plugins -> available -< github -> insatll without restart
+now got o jenkins home page and -> manage jenkins -> global tool configuration => set the git as default
+
+now test a project in jenkins > to build through maven
+go to jenkins home page -> create a new item -> select -> maven ->  give the github repository url ->
+                                          https://github.com/usman6745/hello-world_test.git
+                     in Build Section -> pom.xml
+                        Goals and options -> clean install package
+                        
+                 
