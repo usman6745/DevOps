@@ -1,0 +1,74 @@
+Install Jenkins on AWS EC2
+Jenkins is a self-contained Java-based program, ready to run out-of-the-box, with packages for Windows, Mac OS X and other Unix-like operating systems. As an extensible automation server, Jenkins can be used as a simple CI server or turned into the continuous delivery hub for any project.
+
+Pre req : ec2 with amazon linux (rhel 7.x)
+Java 1.8x
+
+Check the path 
+#echo $PATH
+
+Become root
+#sudo su
+#echo $PATH
+#yum -y install java-1.8.0-openjdk
+#whereis java
+set in env variable
+java -version
+find /usr/lib/jvm/java-1.8* | head -n 3
+set in env variable
+#vi .bash_profile
+  PATH=$PATH:$JAVA_HOME:$HOME/bin
+  export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-0.amzn2.x86_64/
+   :wq!
+#source .bash_profile
+#echo $PATH
+#echo $JAVA_HOME
+
+      output will be like this
+      [root@usmanshariff1c ~]# java -version
+      openjdk version "1.8.0_191"
+      OpenJDK Runtime Environment (build 1.8.0_191-b12)
+      OpenJDK 64-Bit Server VM (build 25.191-b12, mixed mode)
+      [root@usmanshariff1c ~]# echo $JAVA_HOME  
+      /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-0.amzn2.x86_64/
+      [root@usmanshariff1c ~]# echo $PATH
+      /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/rvm/bin::/root/bin
+
+Install Jenkins
+
+#yum -y install wget
+#wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+#rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+#yum -y install jenkins
+
+Start Service
+# Start jenkins service
+systemctl start jenkins
+
+# Setup Jenkins to start at boot,
+systemctl enable jenkins
+
+Accessing Jenkins
+By default jenkins runs at port 8080, You can access jenkins at
+
+http://YOUR-SERVER-PUBLIC-IP:8080
+
+
+Configure Jenkins
+The default Username is admin
+Grab the default password
+Password Location:/var/lib/jenkins/secrets/initialAdminPassword
+Skip Plugin Installation; We can do it later
+Change admin password
+Admin > Configure > Password
+Configure java path
+Manage Jenkins > Global Tool Configuration > JDK
+Create another admin user id
+Test Jenkins Jobs
+Create “new item”
+Enter an item name – My-First-Project
+Chose Freestyle project
+Under Build section Execute shell : echo "Welcome to Jenkins Demo"
+Save your job
+Build job
+Check "console output"
