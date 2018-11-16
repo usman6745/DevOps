@@ -5,6 +5,12 @@ yum update -y
 2.Install docker
 
 yum install docker -y
+
+useradd dockeradmin
+passwd dockeradmin
+usermod -aG docker dockeradmin
+
+
 Docker Installation on CentOS server
 Referance URL : https://docs.docker.com/install/linux/docker-ce/centos/#install-using-the-repository
 PREREQUISITES
