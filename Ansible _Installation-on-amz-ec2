@@ -8,6 +8,8 @@ Install Ansible on Amazon ec2 linux machine
 
 #sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 #sudo yum -y install ansible
+#sudo yum install python-pip
+#sudo pip install boto
 
 #ansible --version
   [root@usmanshariff2c ~]# ansible --version
