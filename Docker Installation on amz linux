@@ -1,35 +1,30 @@
-Installing Docker on Amazon Linux server
-1.Update packages
+how to search a docker image in hub.docker.com
+docker search httpd
+Download a docker image from hub.docker.com
+docker image pull <image_name>:<image_version/tag>
+List out docker images from your local system
+docker image ls
+Create/run/start a docker container from image
+docker run -d --name <container_Name> <image_name>:<image_version/tag>
 
-yum update -y
-2.Install docker
+d - run your container in back ground (detached)
+Expose your application to host server
+docker run -d  -p <host_port>:<container_port> --name <container_Name> <image_name>:<Image_version/tag>
 
-yum install docker -y
-Docker Installation on CentOS server
-Referance URL : https://docs.docker.com/install/linux/docker-ce/centos/#install-using-the-repository
-PREREQUISITES
-Please follow below steps to install docker CE on CentoOS server instance. For RedHat only Docker EE available
-
-1.Install required packages.
-
-sudo yum install -y yum-utils \
-  device-mapper-persistent-data \
-  lvm2
-  
-2.Use the following command to set up the stable repository.
-
-sudo yum-config-manager \
-   --add-repo \
-   https://download.docker.com/linux/centos/docker-ce.repo
-INSTALLING DOCKER CE
-1.Install the latest version of Docker CE.
-
-sudo yum install docker-ce
-If prompted to accept the GPG key, verify that the fingerprint matches 060A 61C5 1B55 8A7F 742B 77AA C52F EB6B 621E 9F35, and if so, accept it.
-
-2.Start Docker.
-
-sudo systemctl start docker
-3.Verify that docker is installed correctly by running the hello-world image.
-
-sudo docker run hello-world
+docker run -d --name httpd_server -p 8080:80 httpd:2.2
+List out running containers
+docker ps
+List out all docker container (running, stpooed, terminated, etc...)
+docker ps -a
+run a OS based container which interactive mode (nothing but login to container after it is up and running)
+docker run -i -t --name centos_server centos:latest
+i - interactive
+t - Terminal
+Stop a container
+docker stop <container_id>
+Start a container which is in stopped or exit state
+docker start <container_id>
+Remove a container
+docker rm <container_id>
+login to a docker container
+docker exec -it <container_Name> /bin/bash
